@@ -1,6 +1,6 @@
 import { Counter } from '..'
 
-function bufferEquals(a, b) {
+const bufferEquals = (a, b) => {
   if (a.length != b.length) return false
   for (var i = 0; i < a.length; i++) {
     if (a[i] != b[i]) return false
@@ -8,50 +8,48 @@ function bufferEquals(a, b) {
   return true
 }
 
-function makeTest(options) {
-  return function (test) {
-    var result = Uint8Array.from(Buffer.from(options.incrementResult, 'hex'))
+const makeTest = (options) => (test) => {
+  var result = Uint8Array.from(Buffer.from(options.incrementResult, 'hex'))
 
-    if (options.hasOwnProperty('nullish')) {
-      var counter = new Counter(options.nullish)
-      counter.increment()
-      test.ok(bufferEquals(counter._counter, result), 'counter failed to initialize with a nullish thing')
-    }
-
-    if (options.hasOwnProperty('number')) {
-      var counter = new Counter(options.number)
-      counter.increment()
-      test.ok(bufferEquals(counter._counter, result), 'counter failed to initialize with a number')
-
-      counter.setValue(options.number)
-      counter.increment()
-      test.ok(bufferEquals(counter._counter, result), 'counter failed to reset to a number')
-
-      counter = new Counter()
-      counter.setValue(options.number)
-      counter.increment()
-      test.ok(bufferEquals(counter._counter, result), 'counter failed to reset to a number')
-    }
-
-    if (options.bytes) {
-      var bytes = Uint8Array.from(Buffer.from(options.bytes, 'hex'))
-
-      var counter = new Counter(bytes)
-      counter.increment()
-      test.ok(bufferEquals(counter._counter, result), 'counter failed to initialize with bytes')
-
-      counter.setBytes(bytes)
-      counter.increment()
-      test.ok(bufferEquals(counter._counter, result), 'counter failed to reset with bytes')
-
-      counter = new Counter()
-      counter.setBytes(bytes)
-      counter.increment()
-      test.ok(bufferEquals(counter._counter, result), 'counter failed to reset with bytes')
-    }
-
-    test.done()
+  if (options.hasOwnProperty('nullish')) {
+    var counter = new Counter(options.nullish)
+    counter.increment()
+    test.ok(bufferEquals(counter._counter, result), 'counter failed to initialize with a nullish thing')
   }
+
+  if (options.hasOwnProperty('number')) {
+    var counter = new Counter(options.number)
+    counter.increment()
+    test.ok(bufferEquals(counter._counter, result), 'counter failed to initialize with a number')
+
+    counter.setValue(options.number)
+    counter.increment()
+    test.ok(bufferEquals(counter._counter, result), 'counter failed to reset to a number')
+
+    counter = new Counter()
+    counter.setValue(options.number)
+    counter.increment()
+    test.ok(bufferEquals(counter._counter, result), 'counter failed to reset to a number')
+  }
+
+  if (options.bytes) {
+    var bytes = Uint8Array.from(Buffer.from(options.bytes, 'hex'))
+
+    var counter = new Counter(bytes)
+    counter.increment()
+    test.ok(bufferEquals(counter._counter, result), 'counter failed to initialize with bytes')
+
+    counter.setBytes(bytes)
+    counter.increment()
+    test.ok(bufferEquals(counter._counter, result), 'counter failed to reset with bytes')
+
+    counter = new Counter()
+    counter.setBytes(bytes)
+    counter.increment()
+    test.ok(bufferEquals(counter._counter, result), 'counter failed to reset with bytes')
+  }
+
+  test.done()
 }
 
 export default {

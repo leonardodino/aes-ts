@@ -2,7 +2,7 @@ import { Counter, ecb, cbc, cfb, ofb, ctr } from '..'
 
 const modes = { ecb, cbc, cfb, ofb, ctr }
 
-function bufferEquals(a, b) {
+const bufferEquals = (a, b) => {
   if (a.length != b.length) return false
   for (var i = 0; i < a.length; i++) {
     if (a[i] != b[i]) return false
@@ -10,7 +10,7 @@ function bufferEquals(a, b) {
   return true
 }
 
-function makeTest(options) {
+const makeTest = (options) => {
   var modeOfOperation = options.modeOfOperation
   var mo = modes[modeOfOperation]
 
@@ -36,29 +36,21 @@ function makeTest(options) {
     ciphertext.push(Uint8Array.from(options.encrypted[i]))
   }
 
-  return function (test) {
+  return (test) => {
     var func
     switch (modeOfOperation) {
       case 'ecb':
-        func = function () {
-          return new mo(key)
-        }
+        func = () => new mo(key)
         break
       case 'cfb':
-        func = function () {
-          return new mo(key, iv, segmentSize)
-        }
+        func = () => new mo(key, iv, segmentSize)
         break
       case 'ofb':
       case 'cbc':
-        func = function () {
-          return new mo(key, iv)
-        }
+        func = () => new mo(key, iv)
         break
       case 'ctr':
-        func = function () {
-          return new mo(key, new Counter(0))
-        }
+        func = () => new mo(key, new Counter(0))
         break
       default:
         throw new Error('unknwon mode of operation')
@@ -78,10 +70,10 @@ function makeTest(options) {
   }
 }
 
-var testVectors = require('./test-vectors.json')
+const testVectors = require('./test-vectors.json')
 
-var Tests = {}
-var counts = {}
+const Tests = {}
+const counts = {}
 for (var i = 0; i < testVectors.length; i++) {
   var test = testVectors[i]
   var name = test.modeOfOperation + '-' + test.key.length
