@@ -1,12 +1,12 @@
 import { pkcs7pad, pkcs7strip } from '..'
 
-function bufferEqual(a, b) {
+const bufferEqual = (a, b) => {
   if (a.length != b.length) return false
   for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return false
   return true
 }
 
-function padding(test) {
+const padding = (test) => {
   for (var size = 0; size < 100; size++) {
     // Create a random piece of data
     var data = []

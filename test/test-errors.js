@@ -1,17 +1,15 @@
 import { Counter, ecb, cbc, ofb, cfb } from '..'
 
-function newBuffer(length) {
-  return new Uint8Array(length).fill(42)
-}
+const newBuffer = (length) => new Uint8Array(length).fill(42)
 
 // Invalid key sizes to try
-var keySizes = [0, 1, 2, 7, 8, 9, 15, 17, 23, 25, 31, 33, 100]
+const keySizes = [0, 1, 2, 7, 8, 9, 15, 17, 23, 25, 31, 33, 100]
 
 export default {
-  'test-errors-key-size': function (test) {
+  'test-errors-key-size': (test) => {
     for (var i = 0; i < keySizes.length; i++) {
       test.throws(
-        function () {
+        () => {
           var moo = new ecb(newBuffer(keySizes[i]))
         },
         function (error) {
@@ -24,14 +22,14 @@ export default {
     test.done()
   },
 
-  'test-errors-iv-size': function (test) {
+  'test-errors-iv-size': (test) => {
     var ivSizes = [0, 15, 17, 100]
     for (var i = 0; i < 3; i++) {
       var keySize = 16 + i * 8
 
       for (var j = 0; j < ivSizes.length; j++) {
         test.throws(
-          function () {
+          () => {
             var moo = new cbc(newBuffer(keySize), newBuffer(ivSizes[j]))
           },
           function (error) {
@@ -41,7 +39,7 @@ export default {
         )
 
         test.throws(
-          function () {
+          () => {
             var moo = new ofb(newBuffer(keySize), newBuffer(ivSizes[j]))
           },
           function (error) {
@@ -55,7 +53,7 @@ export default {
     test.done()
   },
 
-  'test-errors-segment-size': function (test) {
+  'test-errors-segment-size': (test) => {
     var key = newBuffer(16)
     var iv = newBuffer(16)
     for (var i = 1; i < 17; i++) {
@@ -67,7 +65,7 @@ export default {
         var moo = new cfb(key, iv, i)
 
         test.throws(
-          function () {
+          () => {
             moo.encrypt(newBuffer(j))
           },
           function (error) {
@@ -81,7 +79,7 @@ export default {
     test.done()
   },
 
-  'test-errors-text-size': function (test) {
+  'test-errors-text-size': (test) => {
     var textSizes = [1, 2, 15, 17, 31, 33]
 
     for (var i = 0; i < 3; i++) {
@@ -96,7 +94,7 @@ export default {
           }
 
           test.throws(
-            function () {
+            () => {
               moo.encrypt(text)
             },
             function (error) {
@@ -120,7 +118,7 @@ export default {
           }
 
           test.throws(
-            function () {
+            () => {
               moo.decrypt(text)
             },
             function (error) {
@@ -135,11 +133,11 @@ export default {
     test.done()
   },
 
-  'test-errors-counter': function (test) {
+  'test-errors-counter': (test) => {
     var textSizes = [0, 1, 2, 15, 17]
     for (var i = 0; i < textSizes.length; i++) {
       test.throws(
-        function () {
+        () => {
           var counter = new Counter(newBuffer(textSizes[i]))
         },
         function (error) {
@@ -150,7 +148,7 @@ export default {
 
       var counter = new Counter()
       test.throws(
-        function () {
+        () => {
           counter.setBytes(newBuffer(textSizes[i]))
         },
         function (error) {
@@ -161,7 +159,7 @@ export default {
 
       var counter = new Counter()
       test.throws(
-        function () {
+        () => {
           counter.setValue(newBuffer(textSizes[i]))
         },
         function (error) {
@@ -172,7 +170,7 @@ export default {
     }
 
     test.throws(
-      function () {
+      () => {
         var counter = new Counter(1.5)
       },
       function (error) {
@@ -183,7 +181,7 @@ export default {
 
     var counter = new Counter()
     test.throws(
-      function () {
+      () => {
         counter.setValue(1.5)
       },
       function (error) {
@@ -193,7 +191,7 @@ export default {
     )
 
     test.throws(
-      function () {
+      () => {
         var counter = new Counter(Number.MAX_SAFE_INTEGER + 1)
       },
       function (error) {
@@ -206,7 +204,7 @@ export default {
     for (var i = 0; i < badThings.length; i++) {
       var counter = new Counter()
       test.throws(
-        function () {
+        () => {
           counter.setBytes(badThings[i])
         },
         function (error) {
@@ -220,7 +218,7 @@ export default {
     for (var i = 0; i < badThings.length; i++) {
       var counter = new Counter()
       test.throws(
-        function () {
+        () => {
           counter.setBytes(badThings[i])
         },
         function (error) {
@@ -231,7 +229,7 @@ export default {
 
       var counter = new Counter()
       test.throws(
-        function () {
+        () => {
           counter.setValue(badThings[i])
         },
         function (error) {
