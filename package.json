@@ -7,11 +7,20 @@
   },
   "description": "A pure JavaScript implementation of the AES block cipher and all common modes of operation.",
   "devDependencies": {
-    "nodeunit": "^0.9.1"
+    "esm": "^3.2.25",
+    "nodeunit": "^0.11.3",
+    "typescript": "^4.0.3"
   },
-  "main": "index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "sideEffects": false,
   "scripts": {
-    "test": "./node_modules/.bin/nodeunit test/index.js"
+    "type-check": "tsc --noEmit",
+    "build:cjs": "tsc --outDir dist/cjs --module commonjs",
+    "build:esm": "tsc --outDir dist/esm",
+    "build": "yarn -s build:cjs && yarn -s build:esm",
+    "pretest": "yarn -s build",
+    "test": "node -r esm ./node_modules/.bin/nodeunit test"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,72 @@
+<html>
+  <body>
+    <pre id="console"></pre>
+    <script>
+      const $console = document.getElementById('console')
+      $console.log = (line) => ($console.innerHTML += line + '\n')
+
+      const bufferEquals = (a, b) => {
+        if (a.length != b.length) return false
+        for (let i = 0; i < a.length; i++) {
+          if (a[i] != b[i]) return false
+        }
+        return true
+      }
+
+      const fetchJSON = async (path) => (await fetch(path)).json()
+      const either = (fn) => {
+        try {
+          return fn()
+        } catch (e) {
+          return e
+        }
+      }
+
+      const runTest = ({ modeOfOperation, key, iv, segmentSize, plaintext, encrypted }, { Counter, ...modes }) => {
+        const fn = {
+          ecb: () => new modes[modeOfOperation](key),
+          cfb: () => new modes[modeOfOperation](key, iv, segmentSize),
+          ofb: () => new modes[modeOfOperation](key, iv),
+          cbc: () => new modes[modeOfOperation](key, iv),
+          ctr: () => new modes[modeOfOperation](key, new Counter(0)),
+        }[modeOfOperation]
+
+        const [encrypter, decrypter] = [fn(), fn()]
+
+        for (let i = 0; i < plaintext.length; i++) {
+          const ciphertext2 = encrypter.encrypt(plaintext[i])
+          if (!bufferEquals(ciphertext2, encrypted[i])) {
+            return 'encrypt failed to match test vector'
+          }
+
+          const plaintext2 = decrypter.decrypt(ciphertext2)
+          if (!bufferEquals(plaintext2, plaintext[i])) {
+            return 'decrypt failed to match original text'
+          }
+        }
+
+        return 'pass'
+      }
+
+      Promise.all([fetchJSON('test-vectors.json'), import('/dist/esm/index.js')]).then(([data, aes]) => {
+        const { passed } = data.reduce(
+          ({ passed, trials }, test) => {
+            const name = ['test', test.modeOfOperation, test.key.length].join('-')
+
+            if (trials[name] == null) trials[name] = 0
+            const run = trials[name]++
+            const result = either(() => runTest(test, aes))
+            const success = result === 'pass'
+            if (success) passed++
+            $console.log(`${success ? '✔' : '✖'} ${name}-${run}: ${result}`)
+            return { passed, trials }
+          },
+          { passed: 0, trials: {} },
+        )
+        const [failed, total] = [data.length - passed, data.length]
+        $console.log(`= ${passed}/${total} passed`)
+        $console.log(`= JSON<${JSON.stringify({ total, passed, failed })}>`)
+      })
+    </script>
+  </body>
+</html>
