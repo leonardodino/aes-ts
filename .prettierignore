@@ -1,0 +1,4 @@
+test/test-vectors.json
+node_modules/
+dist/
+README.md
