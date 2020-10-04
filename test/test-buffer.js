@@ -1,4 +1,4 @@
-import { coerceArray as slowCreateBuffer } from '..'
+import { coerceArray as slowCreateBuffer } from '../dist/esm/utils'
 
 const testArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 const testBuffer = Uint8Array.from(testArray)

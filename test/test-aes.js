@@ -1,6 +1,6 @@
-import { Counter, ecb, cbc, cfb, ofb, ctr } from '..'
+import { Counter, ECB, CBC, CFB, OFB, CTR } from '..'
 
-const modes = { ecb, cbc, cfb, ofb, ctr }
+const modes = { ecb: ECB, cbc: CBC, cfb: CFB, ofb: OFB, ctr: CTR }
 
 const bufferEquals = (a, b) => {
   if (a.length != b.length) return false

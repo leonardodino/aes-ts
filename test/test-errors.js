@@ -1,4 +1,4 @@
-import { Counter, ecb, cbc, ofb, cfb } from '..'
+import { Counter, ECB, CBC, OFB, CFB } from '..'
 
 const newBuffer = (length) => new Uint8Array(length).fill(42)
 
@@ -10,13 +10,44 @@ export default {
     for (var i = 0; i < keySizes.length; i++) {
       test.throws(
         () => {
-          var moo = new ecb(newBuffer(keySizes[i]))
+          var moo = new ECB(newBuffer(keySizes[i]))
         },
         function (error) {
           return error.message === 'invalid key size (must be 16, 24 or 32 bytes)'
         },
         'invalid key size failed to throw an error',
       )
+    }
+
+    test.done()
+  },
+
+  'test-errors-iv-missing': (test) => {
+    var ivSizes = [0, 15, 17, 100]
+    for (var i = 0; i < 3; i++) {
+      var keySize = 16 + i * 8
+
+      for (var j = 0; j < ivSizes.length; j++) {
+        test.throws(
+          () => {
+            var moo = new CBC(newBuffer(keySize))
+          },
+          function (error) {
+            return error.message === 'IV is required!'
+          },
+          'missing iv for cbc failed to throw an error',
+        )
+
+        test.throws(
+          () => {
+            var moo = new OFB(newBuffer(keySize))
+          },
+          function (error) {
+            return error.message === 'IV is required!'
+          },
+          'missing iv for ofb failed to throw an error',
+        )
+      }
     }
 
     test.done()
@@ -30,20 +61,20 @@ export default {
       for (var j = 0; j < ivSizes.length; j++) {
         test.throws(
           () => {
-            var moo = new cbc(newBuffer(keySize), newBuffer(ivSizes[j]))
+            var moo = new CBC(newBuffer(keySize), newBuffer(ivSizes[j]))
           },
           function (error) {
-            return error.message === 'invalid initialization vector size (must be 16 bytes)'
+            return error.message === 'invalid iv size (must be 16 bytes)'
           },
           'invalid iv size for cbc failed to throw an error',
         )
 
         test.throws(
           () => {
-            var moo = new ofb(newBuffer(keySize), newBuffer(ivSizes[j]))
+            var moo = new OFB(newBuffer(keySize), newBuffer(ivSizes[j]))
           },
           function (error) {
-            return error.message === 'invalid initialization vector size (must be 16 bytes)'
+            return error.message === 'invalid iv size (must be 16 bytes)'
           },
           'invalid iv size for ofb failed to throw an error',
         )
@@ -62,7 +93,7 @@ export default {
           continue
         }
 
-        var moo = new cfb(key, iv, i)
+        var moo = new CFB(key, iv, i)
 
         test.throws(
           () => {
@@ -88,9 +119,9 @@ export default {
         for (var k = 0; k < 2; k++) {
           var text = newBuffer(textSizes[j])
           if (k === 0) {
-            var moo = new ecb(key)
+            var moo = new ECB(key)
           } else {
-            var moo = new cbc(key, newBuffer(16))
+            var moo = new CBC(key, newBuffer(16))
           }
 
           test.throws(
@@ -112,9 +143,9 @@ export default {
         for (var k = 0; k < 2; k++) {
           var text = newBuffer(textSizes[j])
           if (k === 0) {
-            var moo = new ecb(key)
+            var moo = new ECB(key)
           } else {
-            var moo = new cbc(key, newBuffer(16))
+            var moo = new CBC(key, newBuffer(16))
           }
 
           test.throws(
