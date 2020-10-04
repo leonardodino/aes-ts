@@ -1,5 +1,5 @@
-import { coerceArray } from '../../utils'
 import type { BufferInput } from '../../utils'
+import { coerceArray } from '../../utils'
 import { Encryptor } from '../../block'
 import { Counter } from './counter'
 

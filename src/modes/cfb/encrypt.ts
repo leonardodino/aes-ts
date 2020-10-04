@@ -1,5 +1,5 @@
-import { coerceArray, copyArray } from '../../utils'
 import type { BufferInput } from '../../utils'
+import { coerceArray, copyArray } from '../../utils'
 import { Encryptor } from '../../block'
 
 export const encrypt = (

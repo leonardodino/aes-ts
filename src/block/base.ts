@@ -1,6 +1,6 @@
+import type { BufferInput } from '../utils'
 import { rcon, S, U1, U2, U3, U4 } from './constants'
 import { coerceArray, convertToInt32 } from '../utils'
-import type { BufferInput } from '../utils'
 
 const getNumberOfRounds = (keysize: number) => {
   switch (keysize) {
