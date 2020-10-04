@@ -1,4 +1,4 @@
-import { ecb } from './dist/esm/index.js'
+import { ECBDecryptor } from './dist/esm/index.js'
 function atob(str) {
   return Buffer.from(str, 'base64').toString('binary')
 }
@@ -7,13 +7,14 @@ function atob(str) {
 const token = 's6VN5JjEl1044zw3Bh5MZK-AGF-fizMChYu7pG0wT84'.slice(0, 32)
 const encrypted = 'f/BZ6F1ePtGpxoTyh+c9+y90X1yXTEvGWXEvTJeOhVE='
 
-
 const key = new TextEncoder().encode(token)
 const encryptedBytes = [...atob(encrypted)].map((a) => a.charCodeAt(0))
 
-const instance = new ecb(key)
+const instance = new ECBDecryptor(key)
 const decryptedBytes = instance.decrypt(encryptedBytes)
-const plaintext = new TextDecoder().decode(decryptedBytes).replace(/\u0010+$/, '')
+const plaintext = new TextDecoder()
+  .decode(decryptedBytes)
+  .replace(/\u0010+$/, '')
 
 console.log({
   "typeof plaintext === 'string'": typeof plaintext === 'string',
