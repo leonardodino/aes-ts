@@ -1,8 +1,11 @@
 {
   "include": ["src"],
   "compilerOptions": {
+    "target": "ES5",
     "isolatedModules": true,
     "moduleResolution": "node",
+    "declaration": true,
+    "sourceMap": true,
     "module": "es6",
     "strict": true,
     "lib": ["es2015"]
