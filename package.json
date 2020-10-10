@@ -1,34 +1,43 @@
 {
-  "name": "aes-js",
-  "version": "3.1.2",
-  "bugs": {
-    "url": "http://github.com/ricmoo/aes-js/issues",
-    "email": "github@ricmoo.com"
-  },
-  "description": "A pure JavaScript implementation of the AES block cipher and all common modes of operation.",
-  "devDependencies": {
-    "esm": "^3.2.25",
-    "nodeunit": "^0.11.3",
-    "prettier": "2.1.2",
-    "typescript": "^4.0.3"
-  },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "name": "aes-ts",
+  "version": "0.0.0-alpha.0",
+  "description": "0 dependency, pure TypesScript implementation of the AES block cipher and common modes of operation.",
+  "author": "Leonardo Dino",
+  "license": "MIT",
+  "homepage": "http://github.com/leonardodino/aes-ts",
+  "bugs": "http://github.com/leonardodino/aes-ts/issues",
+  "main": "dist/index.js",
+  "module": "dist/aes-ts.esm.js",
+  "types": "dist/index.d.ts",
   "sideEffects": false,
+  "files": [
+    "src",
+    "dist"
+  ],
   "scripts": {
-    "type-check": "tsc --noEmit",
-    "lint": "prettier -l .",
-    "build:cjs": "tsc --outDir dist/cjs --module commonjs",
-    "build:esm": "tsc --outDir dist/esm",
-    "build": "yarn -s build:cjs && yarn -s build:esm",
-    "pretest": "yarn -s build",
-    "test": "node -r esm ./node_modules/.bin/nodeunit test"
+    "lint": "tsc --noEmit && tsdx lint src",
+    "prebuild": "rm -rf dist",
+    "build": "tsdx build",
+    "prepublishOnly": "yarn lint && yarn build",
+    "pretest": "yarn build",
+    "test": "node -r esm -r ts-node/register ./node_modules/.bin/nodeunit test"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/ricmoo/aes-js.git"
+    "url": "https://github.com/leonardodino/aes-ts.git"
+  },
+  "devDependencies": {
+    "eslint-plugin-prettier": "^3.1.4",
+    "esm": "^3.2.25",
+    "nodeunit": "^0.11.3",
+    "prettier": "2.1.2",
+    "ts-node": "^9.0.0",
+    "tsdx": "^0.14.0",
+    "typescript": "^4.0.3"
   },
   "keywords": [
+    "typescript",
+    "crypto",
     "aes",
     "aes-ctr",
     "aes-ofb",
@@ -39,7 +48,5 @@
     "decrypt",
     "block",
     "cipher"
-  ],
-  "author": "Richard Moore <me@ricmoo.com>",
-  "license": "MIT"
+  ]
 }
