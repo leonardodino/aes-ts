@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "lint": "tsc --noEmit && tsdx lint src",
-    "prebuild": "rm -r dist",
+    "prebuild": "rm -rf dist",
     "build": "tsdx build",
     "prepublishOnly": "yarn lint && yarn build",
     "pretest": "yarn build",
